@@ -1,0 +1,65 @@
+1.Docker安装
+[root@luojun-1 ~]# yum install docker
+[root@luojun-1 ~]# systemctl start docker; systemctl enable docker
+Created symlink from /etc/systemd/system/multi-user.target.wants/docker.service to /usr/lib/systemd/system/docker.service.
+[root@luojun-1 ~]# 
+
+2.下载官方image
+[root@luojun-1 ~]# docker pull ubuntu
+Using default tag: latest
+Trying to pull repository docker.io/library/ubuntu ... 
+latest: Pulling from docker.io/library/ubuntu
+d54efb8db41d: Pull complete 
+f8b845f45a87: Pull complete 
+e8db7bf7c39f: Pull complete 
+9654c40e9079: Pull complete 
+6d9ef359eaaa: Pull complete 
+Digest: sha256:dd7808d8792c9841d0b460122f1acf0a2dd1f56404f8d1e56298048885e45535
+[root@luojun-1 ~]# 
+
+3.在container里执行echo命令
+[root@luojun-1 ~]# docker run ubuntu /bin/echo "Hello  Docker"
+Hello  Docker
+[root@luojun-1 ~]# 
+
+4.进入container
+[root@luojun-1 ~]# docker run -i -t ubuntu /bin/bash
+root@d5ca2d4b9fd1:/# 
+root@d5ca2d4b9fd1:/# uname  -r
+3.10.0-327.13.1.el7.x86_64
+root@d5ca2d4b9fd1:/# 
+
+4.增加image
+4.1显示images 信息
+[root@luojun-1 ~]# docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+docker.io/centos    latest              a8493f5f50ff        17 hours ago        192.5 MB
+docker.io/ubuntu    latest              0ef2e08ed3fa        5 weeks ago         130 MB
+[root@luojun-1 ~]# 
+
+[root@luojun-1 ~]# docker ps -a | head -2
+CONTAINER ID        IMAGE               COMMAND                  CREATED              STATUS                       PORTS               NAMES
+d1a268e3adf4        centos              "bin/bash -c 'yum -y "   About a minute ago   Exited (0) 22 seconds ago                        zen_einstein
+
+4.2增加images
+[root@luojun-1 ~]# docker commit d1a268e3adf4 new_image/centos_httpd
+sha256:68adc663b76dfbb83c34e1f951b8206482252ec7fd8fa12f7c36c410261c1e1b
+[root@luojun-1 ~]# docker images
+REPOSITORY               TAG                 IMAGE ID            CREATED             SIZE
+new_image/centos_httpd   latest              68adc663b76d        10 seconds ago      306.4 MB
+docker.io/centos         latest              a8493f5f50ff        17 hours ago        192.5 MB
+docker.io/ubuntu         latest              0ef2e08ed3fa        5 weeks ago         130 MB
+[root@luojun-1 ~]# 
+
+[root@luojun-1 ~]# docker ps -a | head -2
+CONTAINER ID        IMAGE               COMMAND                  CREATED              STATUS                       PORTS               NAMES
+d1a268e3adf4        centos              "bin/bash -c 'yum -y "   About a minute ago   Exited (0) 22 seconds ago                        zen_einstein
+[root@luojun-1 ~]# docker commit d1a268e3adf4 new_image/centos_httpd
+sha256:68adc663b76dfbb83c34e1f951b8206482252ec7fd8fa12f7c36c410261c1e1b
+4.3 再次显示images信息
+[root@luojun-1 ~]# docker images
+REPOSITORY               TAG                 IMAGE ID            CREATED             SIZE
+new_image/centos_httpd   latest              68adc663b76d        10 seconds ago      306.4 MB
+docker.io/centos         latest              a8493f5f50ff        17 hours ago        192.5 MB
+docker.io/ubuntu         latest              0ef2e08ed3fa        5 weeks ago         130 MB
+[root@luojun-1 ~]# 
